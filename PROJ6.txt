@@ -1,0 +1,82 @@
+## Assignment: CIS 140 Proj 6
+## Author: ssmith12@student.ncmich.edu
+## Version: 1.0
+
+IFS=","
+
+declare inFile=$1
+declare -a lastName
+declare -a firstName
+declare -a city
+declare -a state
+declare -a zip
+declare -a age
+declare -A people
+
+main() {
+	readFile
+	altReadFile
+	verifyAge
+
+}
+
+main();
+
+readFile () {
+	declare -i lineNumber=0
+	while read lastName firstName address city state zip age
+	do
+		lastNames[$lineNumber]=$lastName
+		firstNames[$lineNumber]=$firstName
+		address[$lineNumber]=$address
+		city[$lineNumber]=$city
+		state[$lineNumber]=$state
+		zip[$lineNumber]=$zip
+		ages[$lineNumber]=$age
+		(( lineNumber++))
+	done <$inFile
+}
+
+altReadFile() {
+	declare -i lineNumber=0
+	declare -ir ROWS=6
+	declare -ir COLUMNS=3
+	while read lastName firstName age
+	do
+		for (( i=0; i < ROWS; i++ )) {
+			for (( j=0; j < COLUMNS; j++ )) {
+				if [ $j -eq 0 ]
+				then
+					people[$i,$j]=$lastName
+				elif [ $j -eq 1 ]
+				then
+					people[$i,$j]=$firstName
+				elif [ $j -eq 2 ]
+				then
+					people[$i,$j]=$address
+				elif [ $j -eq 3 ]
+				then
+					people[$i,$j]=$city
+				elif [ $j -eq 4 ]
+				then
+					people[$i,$j]=$state
+				elif [ $j -eq 5]
+				then
+					people[$i,$j]=$zip
+				else
+					people[$i,$j]=$age
+				fi
+			}
+		}
+		(( lineNumber++ ))
+	done < $inFile
+}
+
+verifyAge() {
+    COUNT=0
+    if [ $age > 65 ]
+    then
+        COUNT++
+    fi
+	echo $COUNT	
+}
